@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    racc (1.4.14)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  racc
+
+BUNDLED WITH
+   1.16.1
