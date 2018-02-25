@@ -25,8 +25,7 @@ src = ARGF.read
 if src.size == 0  
   error("")
 end
-# 開業を
-# <br>に置き換え，<br>かスペースでソースコードを区切る
+# 改行を<br>に置き換え，<br>かスペースでソースコードを区切る
 @split_result = src.gsub("\n", "<br>").split(/\s|(<br>)/)
 # 何も入っていない配列を消す
 @split_result.delete("")
