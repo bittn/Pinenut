@@ -2,7 +2,7 @@
 #|runner.rb|
 #|RunProgram|
 #-------------
-require'byebug'
+require 'byebug'
 class Runner
   def initialize(tkn)
     @token=tkn
@@ -15,12 +15,18 @@ class Runner
     while true
       case @token[pp]
       when /\A1(.+)/
-        putsgetVar($1)
+        puts getVar($1)
       when "0"
         @line+=1
       when /\A3(\w+!=\w+)=(\d)/
         pp+=1
         while getVar($1)!=false
+          run(pp,$2.to_i-1)
+        end
+        pp = $2.to_i
+      when /\A6(\w+!=\w+)=(\d)/
+        pp+=1
+        if getVar($1)!=false
           run(pp,$2.to_i-1)
         end
         pp = $2.to_i
@@ -114,31 +120,31 @@ class Runner
     #else
     #	return"false"
     #end
-    returns
+    return s
   end
 
   def getVar(c)
     case c
-    when/"(.+)"/
+    when /"(.+)"/
       return$1.gsub("\\n","\n")
     when "true"
-      returneval(c)
+      return eval(c)
     when "false"
-      returneval(c)
+      return eval(c)
     when /\w+==\w+/
-      returnevalCond(c)
+      return evalCond(c)
     when /\w+!=\w+/
-      returnevalCond(c)
+      return evalCond(c)
     when /\w+<\w+/
-      returnevalCond(c)
+      return evalCond(c)
     when /\w+>\w+/
-      returnevalCond(c)
+      return evalCond(c)
     when /(\w(\+|-))+\w/
-      returngetValue(c)
+      return getValue(c)
     when /[0-9\.]+/
-      returnc.to_i
+      return c.to_i
     when /.+/#最後
-      return@var[c]
+      return @var[c]
     else
       puts c
       rerror(6,p)

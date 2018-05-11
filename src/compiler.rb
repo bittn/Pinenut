@@ -5,22 +5,26 @@
 class Compiler
 	def initialize(chm)
 		@list_token={
-			#Pleasewriteyournewmethodsettinghere.
+			#Please write your new method setting here.
 			"print"=>1,
 			"<br>"=>0,
 			"="=>4,
 			"++"=>5,
 			"while"=>3,
-			"whileend"=>nil
+			"whileend"=>nil,
+			"if"=>6,
+			"ifend"=>nil,
+			"#include"=>nil
 		}
 		@list_type=[
-			#Pleasewriteyournewtypesettinghere.
+			#Please write your new type setting here.
 			[/".+"/,"STRING"],
 			[/\w\!=\w/,"COND"]
 		]
 		@chomp=chm
 		@token=[]
 		@whilenum=[]
+		@ifnum=[]
 	end
 
 	def run
@@ -47,6 +51,23 @@ class Compiler
 				@token[n]="#{@token[n]}#{@token.size}"
 				@whilenum.pop
 				@i+=1
+			when"if"
+				@i+=1
+				@ifnum.push(@token.size)
+				@token.push("6#{@chomp[@i]}=")
+				@i+=1
+				if@chomp[@i]=="do"
+					@i+=1
+				end
+			when"ifend"
+				n=@ifnum[@ifnum.size-1]
+				@token[n]="#{@token[n]}#{@token.size}"
+				@ifnum.pop
+				@i+=1
+			when "start"
+				@i+=1
+				@token.push("7#{@chomp[@i]}")
+				@i+=1
 			when /(\w)\+\+/
 				@token.push("5#{$1}")
 				@i+=1
@@ -64,8 +85,8 @@ class Compiler
 		return @token
 	end
 
-	deferror(msg)
-	puts"Error:#{@i+1}thtoken(#{@chomp[@i]}):LexerError:#{msg}"
-	exit
-end
+	def error(msg)
+		puts"Error:#{@i+1}thtoken(#{@chomp[@i]}):LexerError:#{msg}"
+		exit
+	end
 end
